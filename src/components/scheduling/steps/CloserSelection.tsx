@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Loader } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
-import { getAllSalesUsers } from '../../../utils/users';
+import { getAllCurrentSalesUsers } from '../../../utils/users';
 import type { Database } from '../../../types/supabase';
 import { useLocation } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const CloserSelection: React.FC<CloserSelectionProps> = ({ onSelect }) =>
   useEffect(() => {
     const fetchSalesUsers = async () => {
       try {
-        const users = await getAllSalesUsers();
+        const users = await getAllCurrentSalesUsers();
         console.log(users)
         // Sort users: current user first, then by role (Sales Rep before Setter)
         const sortedUsers = users.sort((a, b) => {
