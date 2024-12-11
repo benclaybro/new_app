@@ -56,6 +56,28 @@ export async function getAllSalesUsers() {
 }
 
 
+export async function getAllCurrentSalesUsers() {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, name, email, role, nylas_grant_email')
+      .in('role', ['Sales Rep', 'Setter']);
+    if (error) throw error;
+    if (data) {
+      await cacheUsers(data);
+      return data;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching sales users:', error);
+    // Return cached data if available
+    const cachedUsers = await getAllFromStore('users');
+    return cachedUsers.filter(user =>
+      user.role === 'Sales Rep' || user.role === 'Setter'
+    );
+  }
+}
+
 export async function getUsersById(userId: any) {
   const { data, error } = await supabase
     .from('users')
